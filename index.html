@@ -1,8 +1,78 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <body>
-            <header>welcome</header>
-        </body>
-    </head>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Discord Webhook Sender</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 50px;
+    }
+    input, textarea, button {
+      margin: 10px;
+      padding: 10px;
+      width: 80%;
+    }
+    button {
+      background-color: #5865F2;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #4752C4;
+    }
+  </style>
+</head>
+<body>
+  <h1>Send a Message to Discord</h1>
+  <form id="webhookForm">
+    <input type="text" id="username" placeholder="Your Username" required><br>
+    <textarea id="message" placeholder="Your Message" rows="5" required></textarea><br>
+    <button type="submit">Send to Discord</button>
+  </form>
+
+  <script>
+    const webhookURL = "YOUR_DISCORD_WEBHOOK_URL"; // Replace with your Discord webhook URL
+
+    document.getElementById('webhookForm').addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      const username = document.getElementById('username').value;
+      const message = document.getElementById('message').value;
+
+      if (!username || !message) {
+        alert('Please fill out both fields.');
+        return;
+      }
+
+      const payload = {
+        username: username,
+        content: message,
+      };
+
+      try {
+        const response = await fetch(webhookURL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(payload),
+        });
+
+        if (response.ok) {
+          alert('Message sent successfully!');
+          document.getElementById('webhookForm').reset();
+        } else {
+          alert('Failed to send the message.');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred while sending the message.');
+      }
+    });
+  </script>
+</body>
 </html>
